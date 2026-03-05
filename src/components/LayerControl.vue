@@ -9,32 +9,30 @@ const props = defineProps({
 const localVisible = ref(props.isVisible)
 const localOpacity = ref(props.opacity)
 
-watch(localVisible, (newValue) => {
-    emit('toggle-layer', newValue)
-})
-watch(localOpacity, (newValue) => {
-    emit('update-opacity', newValue)
-})
+watch(localVisible, (newValue) => { emit('toggle-layer', newValue) })
+watch(localOpacity, (newValue) => { emit('update-opacity', newValue) })
 
 </script>
 
 <template>
     <div>
-        <label>Opacity: {{ props.opacity }}</label>
-        <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            v-model="localOpacity"
-        />
-    </div>
-    <div>
-        <input
-            type="checkbox"
-            v-model="localVisible"
-        />
-        <label>Toggle Layer</label>
+        <div>
+            <label>Opacity: {{ localOpacity }}</label>
+            <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                v-model.number="localOpacity"
+            />
+        </div>
+        <div>
+            <input
+                type="checkbox"
+                v-model="localVisible"
+            />
+            <label>Toggle Layer</label>
+        </div>
     </div>
 </template>
 
