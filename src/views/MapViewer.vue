@@ -1,8 +1,17 @@
 <script setup>
-import { ref, shallowRef, reactive, onMounted } from 'vue';
+import { ref, shallowRef, onMounted, toRefs } from 'vue';
 import L from 'leaflet'
 
-const myMap = ref(null) 
+const props = defineProps({
+    geoserverUrl: { type: String, required: true },
+    layerName: { type: String, required: true },
+    opacity: { type: Number, required: true },
+})
+
+// keep props reactive as refs so we can use .value in setup
+const { geoserverUrl, layerName, opacity } = toRefs(props)
+
+const myMap = ref(null)
 const map = shallowRef(null)
 const layers = shallowRef({})
 
@@ -10,15 +19,14 @@ onMounted(() => {
     map.value = L.map(myMap.value).setView([21.01367, 105.80100], 13)
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map.value)
 
-    layers.value.NenDC = L.tileLayer.wms('http://localhost:8080/geoserver/bai_4/wms', {
-        layers: 'bai_4:NenDC',
+    layers.value.NenDC = L.tileLayer.wms(geoserverUrl.value, {
+        layers: layerName.value,
         format: 'image/png',
         transparent: true,
-        version: '1.1.0',
+        opacity: opacity.value,
+        srs: 'EPSG:3857',
     }).addTo(map.value)
 })
-
-
 </script>
 
 <template>
