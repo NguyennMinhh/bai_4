@@ -9,13 +9,13 @@ const props = defineProps({
     isVisible: { type:Boolean, required: true }
 })
 
-// keep props reactive as refs so we can use .value in setup
+const emit = defineEmits(['update-coordinate'])
+
 const { geoserverUrl, layerName, opacity, isVisible } = toRefs(props)
 
 const myMap = ref(null)
 const map = shallowRef(null)
 const layers = shallowRef({})
-
 
 onMounted(() => {
     map.value = L.map(myMap.value).setView([21.01367, 105.80100], 13)
@@ -28,6 +28,10 @@ onMounted(() => {
         opacity: Number(opacity.value),
         srs: 'EPSG:3857',
     }).addTo(map.value)
+
+    map.value.on('click', (e) => {
+        emit('update-coordinate', e.latlng.lng, e.latlng.lat)
+    })
 })
 // Khi props opacity thay đổi => gọi Leaflet API cập nhật layer, không reload map
 watch(opacity, (newOpacity) => {
@@ -38,6 +42,7 @@ watch(isVisible, (newValue) => {
     if(newValue) map.value?.addLayer(layers.value.NenDC)
     else map.value?.removeLayer(layers.value.NenDC)
 })
+
 
 </script>
 
