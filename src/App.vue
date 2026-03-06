@@ -23,7 +23,7 @@ const handleUpdateVisible = (newBoolean) => {
     isVisible.value = newBoolean
 }
 
-const handleUpdateCoordinate = (lat, lng) => {
+const handleUpdateCoordinate = (lng, lat) => {
     coordinate.longitude = lng
     coordinate.latitude = lat
 }
